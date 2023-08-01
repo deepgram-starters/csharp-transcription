@@ -24,3 +24,8 @@
 /Users/deepgram/Desktop/Saarth/deepgram-c#-starters/Starter-01/obj/Debug/net7.0/Starter-01.pdb
 /Users/deepgram/Desktop/Saarth/deepgram-c#-starters/Starter-01/obj/Debug/net7.0/Starter-01.genruntimeconfig.cache
 /Users/deepgram/Desktop/Saarth/deepgram-c#-starters/Starter-01/obj/Debug/net7.0/ref/Starter-01.dll
+/Users/deepgram/Desktop/Saarth/deepgram-c#-starters/Starter-01/bin/Debug/net7.0/Deepgram.dll
+/Users/deepgram/Desktop/Saarth/deepgram-c#-starters/Starter-01/bin/Debug/net7.0/Newtonsoft.Json.dll
+/Users/deepgram/Desktop/Saarth/deepgram-c#-starters/Starter-01/obj/Debug/net7.0/Starter-01.csproj.CopyComplete
+/Users/deepgram/Desktop/Saarth/deepgram-c#-starters/Starter-01/bin/Debug/net7.0/DotNetEnv.dll
+/Users/deepgram/Desktop/Saarth/deepgram-c#-starters/Starter-01/bin/Debug/net7.0/Sprache.dll

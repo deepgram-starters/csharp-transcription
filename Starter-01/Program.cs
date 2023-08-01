@@ -6,10 +6,89 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
+using System.Text.Json;
+using Deepgram;
+using DotNetEnv;
+
+
 
 public class FrontendServer
 {
     private readonly int port;
+
+    private async Task HandleApiRequest(HttpContext context)
+{
+    if (context.Request.Method != "POST")
+    {
+        context.Response.StatusCode = StatusCodes.Status405MethodNotAllowed;
+        await context.Response.WriteAsync("Method not allowed. Only POST requests are accepted.");
+        return;
+    }
+
+    if (context.Request.HasFormContentType)
+    {
+         // Load .env file
+        DotNetEnv.Env.Load();
+
+        // Access the values from environment variables
+        string apiKey = Environment.GetEnvironmentVariable("deepgram_api_key");
+        var credentials = new Credentials(apiKey);
+        var deepgram = new DeepgramClient(credentials);
+        
+        var form = await context.Request.ReadFormAsync();
+
+        // Accessing form data
+        string url = form["url"];
+        string model = form["model"];
+        string tier = form["tier"];
+        string features = form["features"];
+
+        if (!string.IsNullOrEmpty(features))
+        {
+            try
+            {
+                // Parse the JSON data into a dictionary
+                var featuresData = JsonSerializer.Deserialize<Dictionary<string, object>>(features);
+            }
+            catch (JsonException)
+            {
+                // JSON parsing failed, handle the error
+                context.Response.StatusCode = StatusCodes.Status400BadRequest;
+                await context.Response.WriteAsync("Invalid JSON data in the form.");
+                return;
+            }
+        }
+
+        Console.WriteLine($"Received request for {url} with model {model} and tier {tier}");
+        Console.WriteLine($"Features: {features}");
+
+        // Handle file uploads
+        var file = form.Files.GetFile("file");
+        if (file != null && file.Length > 0)
+        {
+            // Process the uploaded file (save, manipulate, etc.)
+            // Example:
+            string fileName = file.FileName;
+            using (var stream = new FileStream(fileName, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
+        }
+
+        // Your API logic goes here
+        // Example:
+        string response = $"File uploaded successfully!";
+        context.Response.ContentType = "text/plain";
+        await context.Response.WriteAsync(response);
+    }
+    else
+    {
+        context.Response.StatusCode = StatusCodes.Status400BadRequest;
+        await context.Response.WriteAsync("Invalid request format. Only form data is accepted.");
+    }
+}
 
     public FrontendServer(int port)
     {
@@ -19,11 +98,15 @@ public class FrontendServer
     public void Start()
     {
         var host = new WebHostBuilder()
-            .UseKestrel()
-            .ConfigureServices(services => services.AddSingleton(this))
-            .Configure(app => app.Run(HandleRequest))
-            .UseUrls($"http://localhost:{port}/")
-            .Build();
+        .UseKestrel()
+        .ConfigureServices(services => services.AddSingleton(this))
+        .Configure(app =>
+        {
+            app.Map("/api", apiApp => apiApp.Run(HandleApiRequest));
+            app.Run(HandleRequest);
+        })
+        .UseUrls($"http://localhost:{port}/")
+        .Build();
 
         host.Run();
     }
@@ -74,7 +157,7 @@ public class FrontendServer
 
     public static void Main(string[] args)
     {
-        int port = 3000;
+        int port = 8080;
         FrontendServer server = new FrontendServer(port);
         server.Start();
         Console.WriteLine($"Server started on port {port}");
