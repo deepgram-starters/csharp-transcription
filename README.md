@@ -1,4 +1,4 @@
-# Deepgram Jabaq Starters
+# Deepgram C# Starters
 
 Please check out the starters contained in this repository, for examples of how to build Deepgram into your Python-based applications. The starters can be found in their own directories.
 
@@ -33,5 +33,3 @@ If you have found a bug or if you have a feature request, please report them at 
 ## License
 
 This project is licensed under the MIT license. See the [LICENSE](./LICENSE) file for more info.
-# deepgram-java-starters
-# deepgram-csharp-starters
