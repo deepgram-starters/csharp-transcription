@@ -34,6 +34,19 @@
           "lib/netstandard1.3/DotNetEnv.dll": {}
         }
       },
+      "JSON/1.0.1": {
+        "type": "package",
+        "compile": {
+          "lib/net40/Json.dll": {
+            "related": ".pdb"
+          }
+        },
+        "runtime": {
+          "lib/net40/Json.dll": {
+            "related": ".pdb"
+          }
+        }
+      },
       "Microsoft.Extensions.Configuration/6.0.1": {
         "type": "package",
         "dependencies": {
@@ -1703,6 +1716,28 @@
         "dotnetenv.2.5.0.nupkg.sha512",
         "dotnetenv.nuspec",
         "lib/netstandard1.3/DotNetEnv.dll"
+      ]
+    },
+    "JSON/1.0.1": {
+      "sha512": "n387Xh1oDWolCIVb2oMV1bWkEKBBk5iLkMuaiAQuLUaAZwowyym2s/6b/hFnmS5J3bzINmZ7I2WEbBAZMQd2dg==",
+      "type": "package",
+      "path": "json/1.0.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE",
+        "json.1.0.1.nupkg.sha512",
+        "json.nuspec",
+        "lib/net35/Json.Net35.dll",
+        "lib/net35/Json.Net35.pdb",
+        "lib/net40/Json.dll",
+        "lib/net40/Json.pdb",
+        "lib/sl3/Json.Silverlight.dll",
+        "lib/sl3/Json.Silverlight.pdb",
+        "lib/sl4/Json.Silverlight4.dll",
+        "lib/sl4/Json.Silverlight4.pdb",
+        "lib/wp/Json.WindowsPhone.dll",
+        "lib/wp/Json.WindowsPhone.pdb"
       ]
     },
     "Microsoft.Extensions.Configuration/6.0.1": {
@@ -5497,7 +5532,8 @@
   "projectFileDependencyGroups": {
     "net7.0": [
       "Deepgram >= 2.2.0",
-      "DotNetEnv >= 2.5.0"
+      "DotNetEnv >= 2.5.0",
+      "Json >= 1.0.1"
     ]
   },
   "packageFolders": {
@@ -5544,6 +5580,10 @@
           "DotNetEnv": {
             "target": "Package",
             "version": "[2.5.0, )"
+          },
+          "Json": {
+            "target": "Package",
+            "version": "[1.0.1, )"
           }
         },
         "imports": [
@@ -5568,5 +5608,17 @@
         "runtimeIdentifierGraphPath": "/opt/homebrew/Cellar/dotnet/7.0.100/libexec/sdk/7.0.100/RuntimeIdentifierGraph.json"
       }
     }
-  }
+  },
+  "logs": [
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'JSON 1.0.1' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' instead of the project target framework 'net7.0'. This package may not be fully compatible with your project.",
+      "libraryId": "JSON",
+      "targetGraphs": [
+        "net7.0"
+      ]
+    }
+  ]
 }

@@ -9,7 +9,8 @@
       "Starter-01/1.0.0": {
         "dependencies": {
           "Deepgram": "2.2.0",
-          "DotNetEnv": "2.5.0"
+          "DotNetEnv": "2.5.0",
+          "JSON": "1.0.1"
         },
         "runtime": {
           "Starter-01.dll": {}
@@ -42,6 +43,14 @@
           "lib/netstandard1.3/DotNetEnv.dll": {
             "assemblyVersion": "2.5.0.0",
             "fileVersion": "2.5.0.0"
+          }
+        }
+      },
+      "JSON/1.0.1": {
+        "runtime": {
+          "lib/net40/Json.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
           }
         }
       },
@@ -840,6 +849,13 @@
       "sha512": "sha512-BjRAEr3fBXo0+1rbC5Z1NTcYH2z+qnjROXKisR78VtL87UAlseelvg0N3aMAk5Bexuph13IKEmxVk5b9CrpdWw==",
       "path": "dotnetenv/2.5.0",
       "hashPath": "dotnetenv.2.5.0.nupkg.sha512"
+    },
+    "JSON/1.0.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-n387Xh1oDWolCIVb2oMV1bWkEKBBk5iLkMuaiAQuLUaAZwowyym2s/6b/hFnmS5J3bzINmZ7I2WEbBAZMQd2dg==",
+      "path": "json/1.0.1",
+      "hashPath": "json.1.0.1.nupkg.sha512"
     },
     "Microsoft.Extensions.Configuration/6.0.1": {
       "type": "package",

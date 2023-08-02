@@ -1,11 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "eUwOSkrsJlZ6QtweXtGZ3pWCURuVXuuCx7FAPofDfZZ7GOzvY0HzHOnUzrvhcyt6jBnuQUBiqjQ3rNp7/nIZig==",
+  "dgSpecHash": "8P5yQiYoXpRft/2TP+TZXEIW3uZhXKVrskFiiGwmzHsKAQGVju2ZKbXenNnt48vvK6VE9dMuv6h0tXgcBSjMvg==",
   "success": true,
   "projectFilePath": "/Users/deepgram/Desktop/Saarth/deepgram-c#-starters/Starter-01/Starter-01.csproj",
   "expectedPackageFiles": [
     "/Users/deepgram/.nuget/packages/deepgram/2.2.0/deepgram.2.2.0.nupkg.sha512",
     "/Users/deepgram/.nuget/packages/dotnetenv/2.5.0/dotnetenv.2.5.0.nupkg.sha512",
+    "/Users/deepgram/.nuget/packages/json/1.0.1/json.1.0.1.nupkg.sha512",
     "/Users/deepgram/.nuget/packages/microsoft.extensions.configuration/6.0.1/microsoft.extensions.configuration.6.0.1.nupkg.sha512",
     "/Users/deepgram/.nuget/packages/microsoft.extensions.configuration.abstractions/6.0.0/microsoft.extensions.configuration.abstractions.6.0.0.nupkg.sha512",
     "/Users/deepgram/.nuget/packages/microsoft.extensions.configuration.fileextensions/6.0.0/microsoft.extensions.configuration.fileextensions.6.0.0.nupkg.sha512",
@@ -100,5 +101,16 @@
     "/Users/deepgram/.nuget/packages/system.xml.readerwriter/4.3.0/system.xml.readerwriter.4.3.0.nupkg.sha512",
     "/Users/deepgram/.nuget/packages/system.xml.xdocument/4.3.0/system.xml.xdocument.4.3.0.nupkg.sha512"
   ],
-  "logs": []
+  "logs": [
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'JSON 1.0.1' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' instead of the project target framework 'net7.0'. This package may not be fully compatible with your project.",
+      "libraryId": "JSON",
+      "targetGraphs": [
+        "net7.0"
+      ]
+    }
+  ]
 }

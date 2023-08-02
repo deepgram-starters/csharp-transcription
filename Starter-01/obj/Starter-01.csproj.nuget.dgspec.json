@@ -45,6 +45,10 @@
             "DotNetEnv": {
               "target": "Package",
               "version": "[2.5.0, )"
+            },
+            "Json": {
+              "target": "Package",
+              "version": "[1.0.1, )"
             }
           },
           "imports": [

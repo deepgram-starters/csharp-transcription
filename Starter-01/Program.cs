@@ -11,7 +11,10 @@ using Microsoft.AspNetCore.Http;
 using System.Text.Json;
 using Deepgram;
 using DotNetEnv;
-
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Configuration;
+using System.Text.Json.Serialization;
+using Deepgram.Transcription;
 
 
 public class FrontendServer
@@ -20,6 +23,7 @@ public class FrontendServer
 
     private async Task HandleApiRequest(HttpContext context)
 {
+
     if (context.Request.Method != "POST")
     {
         context.Response.StatusCode = StatusCodes.Status405MethodNotAllowed;
@@ -44,13 +48,14 @@ public class FrontendServer
         string model = form["model"];
         string tier = form["tier"];
         string features = form["features"];
+        var featuresData = null as Dictionary<string, object>;
 
         if (!string.IsNullOrEmpty(features))
         {
             try
             {
                 // Parse the JSON data into a dictionary
-                var featuresData = JsonSerializer.Deserialize<Dictionary<string, object>>(features);
+                featuresData = JsonSerializer.Deserialize<Dictionary<string, object>>(features);
             }
             catch (JsonException)
             {
@@ -66,6 +71,34 @@ public class FrontendServer
 
         // Handle file uploads
         var file = form.Files.GetFile("file");
+
+        // Create the PrerecordedTranscriptionOptions object
+        var transcriptionOptions = new PrerecordedTranscriptionOptions
+        {
+            Model = model,
+        };
+
+        // Set the tier if it was provided
+        if (!string.IsNullOrEmpty(tier) && tier != "undefined")
+        {
+            transcriptionOptions.Tier = tier;
+        }
+
+        Console.WriteLine($"Transcription options: {JsonSerializer.Serialize(transcriptionOptions)}");
+
+        // Set the features if they were provided by traversing the dictionary
+        if (featuresData != null)
+        {
+            foreach (var feature in featuresData)
+            {
+                var key = feature.Key.ToString();
+                var value = feature.Value.ToString();
+                SetFeatures(transcriptionOptions, key, value);
+            }
+        }
+        
+        Console.WriteLine($"Transcription options: {JsonSerializer.Serialize(transcriptionOptions)}");
+
         if (file != null && file.Length > 0)
         {
             // Process the uploaded file (save, manipulate, etc.)
@@ -75,6 +108,11 @@ public class FrontendServer
             {
                 await file.CopyToAsync(stream);
             }
+        } else {
+            var deepgramResponse = await deepgram.Transcription.Prerecorded.GetTranscriptionAsync(
+                new Deepgram.Transcription.UrlSource("https://static.deepgram.com/examples/Bueller-Life-moves-pretty-fast.wav"),
+               transcriptionOptions);
+            Console.WriteLine(JsonSerializer.Serialize(deepgramResponse));
         }
 
         // Your API logic goes here
@@ -154,6 +192,44 @@ public class FrontendServer
             return "text/plain";
         }
     }
+
+    public static void SetFeatures(PrerecordedTranscriptionOptions transcriptionOptions, string key, string value)
+    {
+        switch (key)
+        {
+            case "smart_format":
+                transcriptionOptions.SmartFormat = bool.Parse(value);
+                break;
+            case "punctuate":
+                transcriptionOptions.Punctuate = bool.Parse(value);
+                break;
+            case "paragraphs":
+                transcriptionOptions.Paragraphs = bool.Parse(value);
+                break;
+            case "utterances":
+                transcriptionOptions.Utterances = bool.Parse(value);
+                break;
+            case "numerals":
+                transcriptionOptions.Numerals = bool.Parse(value);
+                break;
+            case "profanity_filter":
+                transcriptionOptions.ProfanityFilter = bool.Parse(value);
+                break;
+            case "diarize":
+                transcriptionOptions.Diarize = bool.Parse(value);
+                break;
+            case "summarize":
+                transcriptionOptions.Summarize = "v2";
+                break;
+            case "detect_topics":
+                transcriptionOptions.DetectTopics = bool.Parse(value);
+                break;
+            default:
+                Console.WriteLine($"Feature {key} not recognized.");
+                break;
+        }
+    }
+
 
     public static void Main(string[] args)
     {
