@@ -15,6 +15,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Configuration;
 using System.Text.Json.Serialization;
 using Deepgram.Transcription;
+using System.Text;
 
 
 public class FrontendServer
@@ -84,8 +85,6 @@ public class FrontendServer
             transcriptionOptions.Tier = tier;
         }
 
-        Console.WriteLine($"Transcription options: {JsonSerializer.Serialize(transcriptionOptions)}");
-
         // Set the features if they were provided by traversing the dictionary
         if (featuresData != null)
         {
@@ -96,31 +95,73 @@ public class FrontendServer
                 SetFeatures(transcriptionOptions, key, value);
             }
         }
-        
-        Console.WriteLine($"Transcription options: {JsonSerializer.Serialize(transcriptionOptions)}");
+
+        var deepgramResponseJson = null as PrerecordedTranscription;
 
         if (file != null && file.Length > 0)
         {
-            // Process the uploaded file (save, manipulate, etc.)
-            // Example:
             string fileName = file.FileName;
-            using (var stream = new FileStream(fileName, FileMode.Create))
+            string mimeType = file.ContentType;
+            
+            try
+            {   
+                using (FileStream stream = File.Create(fileName))
+                {
+                    await file.CopyToAsync(stream);
+                }
+                using (FileStream stream = File.OpenRead(fileName))
+                {
+                    var deepgramResponse = await deepgram.Transcription.Prerecorded.GetTranscriptionAsync(
+                        new StreamSource(stream, mimeType), transcriptionOptions);
+                    deepgramResponseJson =  deepgramResponse;
+                }
+            }
+            catch (Exception ex)
             {
-                await file.CopyToAsync(stream);
+                Console.WriteLine($"An error occurred while processing the file: {ex.Message}");
+            }
+            // Delete the file after it has been processed
+            if (File.Exists(fileName)){
+            File.Delete(fileName);
             }
         } else {
-            var deepgramResponse = await deepgram.Transcription.Prerecorded.GetTranscriptionAsync(
-                new Deepgram.Transcription.UrlSource("https://static.deepgram.com/examples/Bueller-Life-moves-pretty-fast.wav"),
-               transcriptionOptions);
-            Console.WriteLine(JsonSerializer.Serialize(deepgramResponse));
+            try{
+                var deepgramResponse = await deepgram.Transcription.Prerecorded.GetTranscriptionAsync(
+                    new Deepgram.Transcription.UrlSource(url),
+                transcriptionOptions);
+                deepgramResponseJson =  deepgramResponse;
+            } catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred while processing the audio: {ex.Message}");
+            }
         }
 
-        // Your API logic goes here
-        // Example:
-        string response = $"File uploaded successfully!";
-        context.Response.ContentType = "text/plain";
-        await context.Response.WriteAsync(response);
-    }
+        var options = new JsonSerializerOptions
+        {
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase // Use CamelCase naming convention
+        };
+
+        var responseObject = new
+        {
+            model = model,
+            tier = tier,
+            version = "1.0",
+            dgFeatures = featuresData,
+            transcription = deepgramResponseJson,
+        };
+
+        context.Response.ContentType = "application/json";
+        // allow CORS
+        context.Response.Headers.Add("Access-Control-Allow-Origin", "*");
+        context.Response.Headers.Add("Access-Control-Allow-Headers", "Content-Type");
+        context.Response.Headers.Add("Access-Control-Allow-Methods", "POST, GET, OPTIONS");
+        Console.WriteLine($"Sending response: {JsonSerializer.Serialize(responseObject)}");
+        
+
+        string responseJson = JsonSerializer.Serialize(responseObject, options);
+        byte[] responseBytes = Encoding.UTF8.GetBytes(responseJson);
+        await context.Response.Body.WriteAsync(responseBytes, 0, responseBytes.Length);
+        }
     else
     {
         context.Response.StatusCode = StatusCodes.Status400BadRequest;
