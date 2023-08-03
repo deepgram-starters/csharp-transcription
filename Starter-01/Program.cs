@@ -6,9 +6,14 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using System.Text.Json;
 using Deepgram;
 using DotNetEnv;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Configuration;
+using System.Text.Json.Serialization;
 using Deepgram.Transcription;
 using System.Text;
 
@@ -61,6 +66,9 @@ public class FrontendServer
                 return;
             }
         }
+
+        Console.WriteLine($"Received request for {url} with model {model} and tier {tier}");
+        Console.WriteLine($"Features: {features}");
 
         // Handle file uploads
         var file = form.Files.GetFile("file");
@@ -147,6 +155,7 @@ public class FrontendServer
         context.Response.Headers.Add("Access-Control-Allow-Origin", "*");
         context.Response.Headers.Add("Access-Control-Allow-Headers", "Content-Type");
         context.Response.Headers.Add("Access-Control-Allow-Methods", "POST, GET, OPTIONS");
+        Console.WriteLine($"Sending response: {JsonSerializer.Serialize(responseObject)}");
         
 
         string responseJson = JsonSerializer.Serialize(responseObject, options);
