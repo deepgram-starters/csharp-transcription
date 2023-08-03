@@ -34,4 +34,3 @@ If you have found a bug or if you have a feature request, please report them at 
 
 This project is licensed under the MIT license. See the [LICENSE](./LICENSE) file for more info.
 # deepgram-cpp-starters
-# deepgram-cpp-starters
