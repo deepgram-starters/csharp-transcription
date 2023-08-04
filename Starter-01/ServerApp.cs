@@ -4,10 +4,10 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Http;
-using YourProject.Handlers;
+using WebApp.Handlers;
 using DotNetEnv;
 
-namespace YourProject
+namespace WebApp
 {
     public class ServerApp
     {

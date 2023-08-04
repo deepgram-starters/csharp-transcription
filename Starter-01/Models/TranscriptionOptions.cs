@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Deepgram.Transcription;
 
-namespace YourProject.Models
+namespace WebApp.Models
 {
   public class TranscriptionOptions
   {

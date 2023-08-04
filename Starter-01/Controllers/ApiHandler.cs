@@ -7,10 +7,10 @@ using Microsoft.AspNetCore.Http;
 using Deepgram;
 using DotNetEnv;
 using Deepgram.Transcription;
-using YourProject.Models;
-using YourProject.Handlers;
+using WebApp.Models;
+using WebApp.Handlers;
 
-namespace YourProject.Handlers
+namespace WebApp.Handlers
 {
   public class ApiHandler
   {

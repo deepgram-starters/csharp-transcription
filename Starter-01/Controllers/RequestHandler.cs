@@ -3,7 +3,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 
-namespace YourProject.Handlers
+namespace WebApp.Handlers
 {
   public class RequestHandler
   {
