@@ -1,35 +1,35 @@
-# Deepgram C# Starters
+# Deepgram .NET Starter
 
-Please check out the starters contained in this repository for examples of how to build Deepgram into your C#-based applications. The starters can be found in their own directories.
+This sample demonstrates interacting with the Deepgram API from a .NET server. It uses the Deepgram .NET SDK to handle API calls, and has a javascript client built from web components.
 
-- [Deepgram .NET Starter](./Starter-01/README.md)
+## Sign-up to Deepgram
 
-## What is Deepgram?
+Before you start, it's essential to generate a Deepgram API key to use in this project. [Sign-up now for Deepgram](https://console.deepgram.com/signup).
 
-Deepgram is an AI speech platform which specializes in (NLU) Natural Language Understanding features and Transcription. It can help get the following from your audio.
+## Quickstart
 
-- [Speaker diarization](https://deepgram.com/product/speech-understanding/)
-- [Language detection](https://deepgram.com/product/speech-understanding/)
-- [Summarization](https://deepgram.com/product/speech-understanding/)
-- [Topic detection](https://deepgram.com/product/speech-understanding/)
-- [Language translation](https://deepgram.com/product/speech-understanding/)
-- [Sentiment analysis](https://deepgram.com/product/speech-understanding/)
-- [Entity detection](https://deepgram.com/product/speech-understanding/)
-- [Transcription](https://deepgram.com/product/transcription/)
-- [Redaction](https://deepgram.com/product/transcription/)
+### Manual
 
-## Create a Free Deepgram Account
+Follow these steps to get started with this starter application.
 
-Before you start, it's essential to generate a Deepgram API key to use in our starter applications. [Sign-up now for Deepgram](https://console.deepgram.com/signup).
+#### Clone the repository
 
-## Issue Reporting
+Go to GitHub and [clone the repository](https://github.com/deepgram-starters/deepgram-csharp-starters).
 
-If you have found a bug or if you have a feature request, please report them at this repository issues section. Please do not report security vulnerabilities on the public GitHub issue tracker. The [Security Policy](./.github/SECURITY.md) details the procedure for contacting Deepgram.
 
-## Author
+#### Edit the config file
 
-[Deepgram](https://deepgram.com)
+Copy the text from `.env-sample` and create a new file called `.env`. Paste in the code and enter your API key you generated in the [Deepgram console](https://console.deepgram.com/).
 
-## License
+```bash
+port=8080
+deepgram_api_key=api_key
+```
 
-This project is licensed under the MIT license. See the [LICENSE](./LICENSE) file for more info.
+#### Run the application
+
+Once running, you can [access the application in your browser](http://localhost:8080/).
+
+```bash
+dotnet run
+```
