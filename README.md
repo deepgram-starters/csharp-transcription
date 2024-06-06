@@ -16,6 +16,13 @@ Follow these steps to get started with this starter application.
 
 Go to GitHub and [clone the repository](https://github.com/deepgram-starters/deepgram-csharp-starters).
 
+#### Navigate into the project folder
+
+Move into the project `./Starter-01`
+
+```bash
+cd ./Starter-01
+```
 
 #### Edit the config file
 
