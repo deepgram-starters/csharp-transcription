@@ -1,5 +1,7 @@
 # Deepgram .NET Starter
 
+[![Discord](https://dcbadge.vercel.app/api/server/xWRaCDBtW4?style=flat)](https://discord.gg/xWRaCDBtW4)
+
 This sample demonstrates interacting with the Deepgram API from a .NET server. It uses the Deepgram .NET SDK to handle API calls, and has a javascript client built from web components.
 
 ## Sign-up to Deepgram
