@@ -1,0 +1,17 @@
+[meta]
+  title = "Pre-recorded Transcription .NET Starter"
+  description = "Basic demo for using Deepgram to transcribe files with .NET"
+  author = "Deepgram DX Team <devrel@deepgram.com> (https://developers.deepgram.com)"
+  useCase = "Prerecorded"
+  language = "C#"
+  framework = ".NET"
+
+[build]
+  command = "dotnet restore"
+
+[config]
+  sample = ".env-sample"
+  output = ".env"
+
+[post-build]
+  message = "dotnet run"
