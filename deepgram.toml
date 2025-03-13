@@ -1,17 +1,17 @@
 [meta]
-  title = "Pre-recorded Transcription .NET Starter"
-  description = "Basic demo for using Deepgram to transcribe files with .NET"
-  author = "Deepgram DX Team <devrel@deepgram.com> (https://developers.deepgram.com)"
-  useCase = "Prerecorded"
-  language = "C#"
-  framework = ".NET"
+title = "C# Transcription Starter"
+description = "Get started using Deepgram's Transcription with this C# demo app"
+author = "Deepgram DX Team <devrel@deepgram.com> (https://developers.deepgram.com)"
+useCase = "Prerecorded"
+language = "C#"
+framework = ".NET"
 
 [build]
-  command = "dotnet restore"
+command = "dotnet restore"
 
 [config]
-  sample = ".env-sample"
-  output = ".env"
+sample = ".env-sample"
+output = ".env"
 
 [post-build]
-  message = "dotnet run"
+message = "dotnet run"
