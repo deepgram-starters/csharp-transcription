@@ -1,17 +1,52 @@
 [meta]
-title = "C# Transcription Starter"
+title = "C# Transcription"
 description = "Get started using Deepgram's Transcription with this C# demo app"
 author = "Deepgram DX Team <devrel@deepgram.com> (https://developers.deepgram.com)"
-useCase = "STT"
+repository = "https://github.com/deepgram-starters/csharp-transcription"
+useCase = "transcription"
 language = "C#"
 framework = ".NET"
+sdk = "6.6.1"
 
-[build]
-command = "dotnet restore"
+# Check prerequisites
+[check]
+command = ["git --version", "dotnet --version"]
+message = "All prerequisites installed"
 
-[config]
-sample = ".env-sample"
-output = ".env"
+# Install dependencies
+[install.pre]
+command = "git submodule update --init --recursive"
+message = "Submodules initialized"
 
-[post-build]
-message = "dotnet run"
+[install]
+command = ["dotnet restore", "cd frontend && corepack pnpm install"]
+message = "Dependencies installed"
+
+[install.post]
+command = "test -f .env || cp sample.env .env"
+message = "Environment configuration ready"
+
+# Start application
+[start.pre]
+command = "test -f .env || (echo '❌ .env not found. Run: cp sample.env .env' && exit 1)"
+message = "Environment validated"
+
+[start]
+command = ["dotnet run", "cd frontend && pnpm run dev -- --port 8080 --no-open"]
+parallel = true
+message = "Application running on http://localhost:8080"
+
+# Update submodules
+[update]
+command = "git submodule update --remote --merge"
+message = "Submodules updated"
+
+# Clean artifacts
+[clean]
+command = ["rm -rf bin", "rm -rf obj", "rm -rf frontend/node_modules", "rm -rf frontend/.vite"]
+message = "Build artifacts cleaned"
+
+# Testing
+[test]
+command = "cd contracts && ./tests/run-transcription-app.sh"
+message = "Tests complete"

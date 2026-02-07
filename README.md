@@ -1,59 +1,59 @@
-# C# Transcription Starter
+# C# Transcription
 
-[![Discord](https://dcbadge.vercel.app/api/server/xWRaCDBtW4?style=flat)](https://discord.gg/xWRaCDBtW4)
+Get started using Deepgram's Transcription with this C# demo app
 
-This sample demonstrates interacting with the Deepgram API from a .NET server. It uses the Deepgram .NET SDK to handle API calls, and has a javascript client built from web components.
+<!-- [**Live Demo \u2192**](#) -->
 
-## What is Deepgram?
+## Quick Start
 
-[Deepgram’s](https://deepgram.com/) voice AI platform provides APIs for speech-to-text, text-to-speech, and full speech-to-speech voice agents. Over 200,000+ developers use Deepgram to build voice AI products and features.
+Click the button below to fork the repo:
 
-## Sign-up to Deepgram
+[![Fork on GitHub](https://img.shields.io/badge/Fork_on_GitHub-blue?logo=github)](https://github.com/deepgram-starters/csharp-transcription/fork)
 
-Before you start, it's essential to generate a Deepgram API key to use in this project. [Sign-up now for Deepgram and create an API key](https://console.deepgram.com/signup?jump=keys).
+## Local Development
 
-## Quickstart
-
-Follow these steps to get started with this starter application.
-
-### Clone the repository
-
-Go to GitHub and [clone the repository](https://github.com/deepgram-starters/deepgram-csharp-starters).
-
-### Edit the config file
-
-Copy the text from `.env-sample` and create a new file called `.env`. Paste in the code and enter your API key you generated in the [Deepgram console](https://console.deepgram.com/).
+<!--
+### CLI
 
 ```bash
-port=8080
-deepgram_api_key=api_key
+dg check
+dg install
+dg start
+```
+-->
+
+### Makefile (Recommended)
+
+```bash
+make init
+cp sample.env .env  # Add your DEEPGRAM_API_KEY
+make start
 ```
 
-### Run the application
+Open [http://localhost:8080](http://localhost:8080) in your browser.
 
-Once running, you can [access the application in your browser](http://localhost:8080/).
+### .NET SDK & pnpm
 
 ```bash
+git clone --recurse-submodules https://github.com/deepgram-starters/csharp-transcription.git
+cd csharp-transcription
+dotnet restore
+cd frontend && corepack pnpm install && cd ..
+cp sample.env .env  # Add your DEEPGRAM_API_KEY
+```
+
+Start both servers in separate terminals:
+
+```bash
+# Terminal 1 - Backend (port 8081)
 dotnet run
+
+# Terminal 2 - Frontend (port 8080)
+cd frontend && corepack pnpm run dev -- --port 8080 --no-open
 ```
 
-## Issue Reporting
-
-If you have found a bug or if you have a feature request, please report them at this repository issues section. Please do not report security vulnerabilities on the public GitHub issue tracker. The [Security Policy](./SECURITY.md) details the procedure for contacting Deepgram.
-
-### Getting Help
-
-We love to hear from you so if you have questions, comments or find a bug in the project, let us know! You can either:
-
-- [Open an issue in this repository](https://github.com/deepgram-starters/csharp-transcription/issues/new)
-- [Join the Deepgram Github Discussions Community](https://github.com/orgs/deepgram/discussions)
-- [Join the Deepgram Discord Community](https://discord.gg/xWRaCDBtW4)
-
-## Author
-
-[Deepgram](https://deepgram.com)
+Open [http://localhost:8080](http://localhost:8080) in your browser.
 
 ## License
 
-This project is licensed under the MIT license. See the [LICENSE](./LICENSE) file for more info.
-
+MIT - See [LICENSE](./LICENSE)
