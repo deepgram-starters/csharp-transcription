@@ -97,7 +97,7 @@ app.UseCors();
 // ============================================================================
 
 /// Validates that either a file or URL was provided in the request
-static (string? url, byte[]? fileBytes, string? mimeType) ValidateTranscriptionInput(
+static async Task<(string? url, byte[]? fileBytes, string? mimeType)> ValidateTranscriptionInput(
     IFormFile? file, string? url)
 {
     if (!string.IsNullOrEmpty(url))
@@ -106,7 +106,7 @@ static (string? url, byte[]? fileBytes, string? mimeType) ValidateTranscriptionI
     if (file is { Length: > 0 })
     {
         using var ms = new MemoryStream();
-        file.CopyTo(ms);
+        await file.CopyToAsync(ms);
         return (null, ms.ToArray(), file.ContentType);
     }
 
@@ -203,7 +203,7 @@ app.MapPost("/stt/transcribe", async (HttpRequest request) =>
         var model = form["model"].FirstOrDefault() ?? DefaultModel;
 
         // Validate input
-        var (inputUrl, fileBytes, mimeType) = ValidateTranscriptionInput(file, url);
+        var (inputUrl, fileBytes, mimeType) = await ValidateTranscriptionInput(file, url);
         if (inputUrl == null && fileBytes == null)
         {
             var (errCode, errBody) = FormatErrorResponse(
