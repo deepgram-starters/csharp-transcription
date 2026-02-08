@@ -1,0 +1,7 @@
+.git
+.env
+bin
+obj
+frontend/node_modules
+frontend/.vite
+contracts

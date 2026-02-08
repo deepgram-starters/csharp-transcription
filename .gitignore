@@ -17,5 +17,8 @@ frontend/.vite/
 # Test results
 test-results/
 
+# Logs
+log.txt
+
 # macOS
 .DS_Store

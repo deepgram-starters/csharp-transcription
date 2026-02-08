@@ -6,7 +6,7 @@
  * modified and extended for your own projects.
  *
  * Key Features:
- * - Single API endpoint: POST /stt/transcribe
+ * - Single API endpoint: POST /api/transcription
  * - Accepts both file uploads and URLs
  * - CORS enabled for frontend communication
  * - Pure API server (frontend served separately)
@@ -35,7 +35,6 @@ const string DefaultModel = "nova-3";
 
 var port = int.TryParse(Environment.GetEnvironmentVariable("PORT"), out var p) ? p : 8081;
 var host = Environment.GetEnvironmentVariable("HOST") ?? "0.0.0.0";
-var frontendPort = int.TryParse(Environment.GetEnvironmentVariable("FRONTEND_PORT"), out var fp) ? fp : 8080;
 
 // ============================================================================
 // API KEY LOADING - Load Deepgram API key from .env
@@ -80,12 +79,9 @@ builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(policy =>
     {
-        policy.WithOrigins(
-                $"http://localhost:{frontendPort}",
-                $"http://127.0.0.1:{frontendPort}")
+        policy.AllowAnyOrigin()
             .AllowAnyHeader()
-            .AllowAnyMethod()
-            .AllowCredentials();
+            .AllowAnyMethod();
     });
 });
 
@@ -185,7 +181,7 @@ static (int statusCode, object body) FormatErrorResponse(
 // API ROUTES - Define your API endpoints here
 // ============================================================================
 
-/// POST /stt/transcribe
+/// POST /api/transcription
 ///
 /// Main transcription endpoint. Accepts either:
 /// - A file upload (multipart/form-data with 'file' field)
@@ -193,7 +189,7 @@ static (int statusCode, object body) FormatErrorResponse(
 ///
 /// Optional parameters:
 /// - model: Deepgram model to use (default: "nova-3")
-app.MapPost("/stt/transcribe", async (HttpRequest request) =>
+app.MapPost("/api/transcription", async (HttpRequest request) =>
 {
     try
     {
@@ -290,8 +286,7 @@ app.MapGet("/api/metadata", () =>
 Console.WriteLine();
 Console.WriteLine(new string('=', 70));
 Console.WriteLine($"🚀 Backend API Server running at http://localhost:{port}");
-Console.WriteLine($"📡 CORS enabled for http://localhost:{frontendPort}");
-Console.WriteLine($"\n💡 Frontend should be running on http://localhost:{frontendPort}");
+Console.WriteLine($"📡 CORS enabled for all origins");
 Console.WriteLine(new string('=', 70));
 Console.WriteLine();
 
