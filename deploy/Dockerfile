@@ -37,8 +37,8 @@ COPY --from=dotnet-builder /build/deepgram.toml /build/sample.env ./
 COPY --from=frontend-builder /build/frontend/dist/ ./frontend/dist/
 
 # Copy shared deployment files
-COPY Caddyfile /etc/caddy/Caddyfile
-COPY start.sh ./start.sh
+COPY deploy/Caddyfile /etc/caddy/Caddyfile
+COPY deploy/start.sh ./start.sh
 RUN chmod +x ./start.sh
 
 ENV ASPNETCORE_URLS=http://0.0.0.0:8081
