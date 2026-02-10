@@ -69,7 +69,7 @@ bool ConsumeNonce(string nonce)
 }
 
 // Cleanup expired nonces every 60 seconds
-var nonceCleanupTimer = new Timer(_ =>
+var nonceCleanupTimer = new Timer(state =>
 {
     var now = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
     foreach (var kvp in sessionNonces)
