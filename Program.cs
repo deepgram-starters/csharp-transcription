@@ -8,12 +8,11 @@
  * Key Features:
  * - Single API endpoint: POST /api/transcription
  * - Accepts both file uploads and URLs
- * - JWT session auth with page nonce (production only)
+ * - JWT session auth with rate limiting (production only)
  * - CORS enabled for frontend communication
  * - Pure API server (frontend served separately)
  */
 
-using System.Collections.Concurrent;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Cryptography;
 using Deepgram;
@@ -42,50 +41,14 @@ var port = int.TryParse(Environment.GetEnvironmentVariable("PORT"), out var p) ?
 var host = Environment.GetEnvironmentVariable("HOST") ?? "0.0.0.0";
 
 // ============================================================================
-// SESSION AUTH - JWT tokens with page nonce for production security
+// SESSION AUTH - JWT tokens with rate limiting for production security
 // ============================================================================
 
 var sessionSecretEnv = Environment.GetEnvironmentVariable("SESSION_SECRET");
 var sessionSecret = sessionSecretEnv ?? Convert.ToHexString(RandomNumberGenerator.GetBytes(32)).ToLowerInvariant();
-var requireNonce = !string.IsNullOrEmpty(sessionSecretEnv);
 var sessionSecretKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(sessionSecret));
 
-var sessionNonces = new ConcurrentDictionary<string, long>();
-const int NonceTtlSeconds = 5 * 60; // 5 minutes
 const int JwtExpirySeconds = 3600; // 1 hour
-
-string GenerateNonce()
-{
-    var nonce = Convert.ToHexString(RandomNumberGenerator.GetBytes(16)).ToLowerInvariant();
-    sessionNonces[nonce] = DateTimeOffset.UtcNow.ToUnixTimeSeconds() + NonceTtlSeconds;
-    return nonce;
-}
-
-bool ConsumeNonce(string nonce)
-{
-    if (!sessionNonces.TryRemove(nonce, out var expiry))
-        return false;
-    return DateTimeOffset.UtcNow.ToUnixTimeSeconds() < expiry;
-}
-
-// Cleanup expired nonces every 60 seconds
-var nonceCleanupTimer = new Timer(state =>
-{
-    var now = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-    foreach (var kvp in sessionNonces)
-    {
-        if (now >= kvp.Value)
-            sessionNonces.TryRemove(kvp.Key, out _);
-    }
-}, null, TimeSpan.FromSeconds(60), TimeSpan.FromSeconds(60));
-
-// Read frontend/dist/index.html template for nonce injection
-string? indexHtmlTemplate = null;
-try
-{
-    indexHtmlTemplate = File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), "frontend", "dist", "index.html"));
-}
-catch (FileNotFoundException) { }
 
 string CreateSessionToken()
 {
@@ -176,45 +139,9 @@ app.UseCors();
 // SESSION ROUTES - Auth endpoints (unprotected)
 // ============================================================================
 
-/// GET / — Serve index.html with injected session nonce (production only)
-app.MapGet("/", () =>
+/// GET /api/session — Issues a JWT for API authentication
+app.MapGet("/api/session", () =>
 {
-    if (indexHtmlTemplate == null)
-        return HttpResults.Text("Frontend not built. Run make build first.", statusCode: 404);
-
-    // Cleanup expired nonces
-    var now = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-    foreach (var kvp in sessionNonces)
-    {
-        if (now >= kvp.Value)
-            sessionNonces.TryRemove(kvp.Key, out _);
-    }
-
-    var nonce = GenerateNonce();
-    var html = indexHtmlTemplate.Replace("</head>", $"<meta name=\"session-nonce\" content=\"{nonce}\">\n</head>");
-    return HttpResults.Content(html, "text/html");
-});
-
-/// GET /api/session — Issues a JWT. In production, requires valid nonce.
-app.MapGet("/api/session", (HttpRequest request) =>
-{
-    if (requireNonce)
-    {
-        var nonce = request.Headers["X-Session-Nonce"].FirstOrDefault();
-        if (string.IsNullOrEmpty(nonce) || !ConsumeNonce(nonce))
-        {
-            return HttpResults.Json(new Dictionary<string, object>
-            {
-                ["error"] = new Dictionary<string, string>
-                {
-                    ["type"] = "AuthenticationError",
-                    ["code"] = "INVALID_NONCE",
-                    ["message"] = "Valid session nonce required. Please refresh the page.",
-                }
-            }, statusCode: 403);
-        }
-    }
-
     var token = CreateSessionToken();
     return HttpResults.Json(new Dictionary<string, string> { ["token"] = token });
 });
@@ -441,12 +368,11 @@ app.MapGet("/api/metadata", () =>
 // SERVER START
 // ============================================================================
 
-var nonceStatus = requireNonce ? " (nonce required)" : "";
 Console.WriteLine();
 Console.WriteLine(new string('=', 70));
 Console.WriteLine($"🚀 Backend API Server running at http://localhost:{port}");
 Console.WriteLine($"📡 CORS enabled for all origins");
-Console.WriteLine($"📡 GET  /api/session{nonceStatus}");
+Console.WriteLine($"📡 GET  /api/session");
 Console.WriteLine($"📡 POST /api/transcription (auth required)");
 Console.WriteLine($"📡 GET  /api/metadata");
 Console.WriteLine(new string('=', 70));
