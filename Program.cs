@@ -324,6 +324,9 @@ app.MapPost("/api/transcription", async (HttpRequest request) =>
     }
 });
 
+// Health check endpoint
+app.MapGet("/health", () => HttpResults.Json(new { status = "ok", service = "transcription" }));
+
 /// GET /api/metadata
 ///
 /// Returns metadata about this starter application from deepgram.toml
@@ -374,6 +377,7 @@ Console.WriteLine($"🚀 Backend API Server running at http://localhost:{port}")
 Console.WriteLine($"📡 CORS enabled for all origins");
 Console.WriteLine($"📡 GET  /api/session");
 Console.WriteLine($"📡 POST /api/transcription (auth required)");
+Console.WriteLine($"📡 GET  /health");
 Console.WriteLine($"📡 GET  /api/metadata");
 Console.WriteLine(new string('=', 70));
 Console.WriteLine();
